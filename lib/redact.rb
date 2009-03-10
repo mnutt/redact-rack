@@ -1,18 +1,18 @@
 module Rack
   class Redact
-    def initialize(app, path)
+    def initialize(app, redacted)
       @app = app
-      @path = ::File.expand_path(path)
+      @redacted = redacted
     end
 
     def redact_expr
-      redacted_list = YAML::load_file(File.join(@path, "config", "redacted.yml"))
-      redacted_list.join("|")
+      @redacted.join("|")
     end
     
     def call(env)
       response = @app.call(env)
-      response[2].map! { |body|
+      response_body = []
+      response[2].each { |body|
         # Use pretty <span> tags when dealing with html
         body.gsub!(/>([^<]*)</) do |inner|
           inner.gsub(/#{redact_expr}/) { |m|
@@ -24,10 +24,10 @@ module Rack
         body.gsub!(/#{redact_expr}/) do |m|
           "*" * m.size
         end
-
-        body
+        response_body << body
       }
 
+      response[2] = response_body
       response
     end
   end

@@ -2,7 +2,7 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 require 'rubygems'
 require 'rack/mock'
 require 'spec'
-require 'redact'
+require 'rack/redact'
 
 TEST_DIR = File.join(File.dirname(__FILE__), 'test_app')
 CONFIG_FILE = File.join(TEST_DIR, 'config', 'redacted.yml')

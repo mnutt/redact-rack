@@ -1,1 +1,8 @@
 redact-rack: automatically redact words on your website
+
+Rails usage:
+
+# config/environment.html
+config.middleware.use "Rack::Redact", YAML::load_file("#{RAILS_ROOT}/config/redacted.yml")
+
+It takes one argument, an array of words to censor.
